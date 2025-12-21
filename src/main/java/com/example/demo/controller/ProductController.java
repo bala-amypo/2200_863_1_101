@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/products")
+@RequestMapping("/products")
 @RequiredArgsConstructor
 public class ProductController {
 
@@ -16,16 +16,11 @@ public class ProductController {
 
     @PostMapping
     public Product create(@RequestBody Product product) {
-        return service.createProduct(product);
+        return service.save(product);
     }
 
     @GetMapping
     public List<Product> getAll() {
-        return service.getAllProducts();
-    }
-
-    @GetMapping("/{id}")
-    public Product get(@PathVariable Long id) {
-        return service.getProduct(id);
+        return service.getAll();
     }
 }

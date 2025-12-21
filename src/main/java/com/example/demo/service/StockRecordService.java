@@ -1,3 +1,14 @@
+package com.example.demo.service;
+
+import com.example.demo.exception.ResourceNotFoundException;
+import com.example.demo.model.*;
+import com.example.demo.repository.*;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class StockRecordService {
@@ -6,7 +17,7 @@ public class StockRecordService {
     private final ProductRepository productRepo;
     private final WarehouseRepository warehouseRepo;
 
-    public StockRecord createStockRecord(Long productId, Long warehouseId, StockRecord record) {
+    public StockRecord create(Long productId, Long warehouseId, int qty) {
 
         Product product = productRepo.findById(productId)
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
@@ -14,29 +25,17 @@ public class StockRecordService {
         Warehouse warehouse = warehouseRepo.findById(warehouseId)
                 .orElseThrow(() -> new ResourceNotFoundException("Warehouse not found"));
 
-        repository.findByProductIdAndWarehouseId(productId, warehouseId)
-                .ifPresent(r -> { throw new IllegalArgumentException("StockRecord already exists"); });
-
-        if (record.getCurrentQuantity() < 0 || record.getReorderThreshold() <= 0)
-            throw new IllegalArgumentException("Invalid stock values");
-
-        record.setProduct(product);
-        record.setWarehouse(warehouse);
-        record.setLastUpdated(LocalDateTime.now());
-
-        return repository.save(record);
+        return repository.save(
+                StockRecord.builder()
+                        .product(product)
+                        .warehouse(warehouse)
+                        .quantity(qty)
+                        .createdAt(LocalDateTime.now())
+                        .build()
+        );
     }
 
-    public StockRecord getStockRecord(Long id) {
-        return repository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("StockRecord not found"));
-    }
-
-    public List<StockRecord> getRecordsByProduct(Long productId) {
-        return repository.findByProductId(productId);
-    }
-
-    public List<StockRecord> getRecordsByWarehouse(Long warehouseId) {
-        return repository.findByWarehouseId(warehouseId);
+    public List<StockRecord> getAll() {
+        return repository.findAll();
     }
 }

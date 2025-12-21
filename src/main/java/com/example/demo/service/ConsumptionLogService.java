@@ -1,3 +1,16 @@
+package com.example.demo.service;
+
+import com.example.demo.exception.ResourceNotFoundException;
+import com.example.demo.model.ConsumptionLog;
+import com.example.demo.model.StockRecord;
+import com.example.demo.repository.ConsumptionLogRepository;
+import com.example.demo.repository.StockRecordRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class ConsumptionLogService {
@@ -5,27 +18,20 @@ public class ConsumptionLogService {
     private final ConsumptionLogRepository repository;
     private final StockRecordRepository stockRepo;
 
-    public ConsumptionLog logConsumption(Long stockRecordId, ConsumptionLog log) {
+    public ConsumptionLog log(Long stockId, int qty) {
+        StockRecord stock = stockRepo.findById(stockId)
+                .orElseThrow(() -> new ResourceNotFoundException("Stock not found"));
 
-        StockRecord stock = stockRepo.findById(stockRecordId)
-                .orElseThrow(() -> new ResourceNotFoundException("StockRecord not found"));
-
-        if (log.getConsumedQuantity() <= 0)
-            throw new IllegalArgumentException("Invalid consumed quantity");
-
-        if (log.getConsumedDate().isAfter(LocalDate.now()))
-            throw new IllegalArgumentException("consumedDate cannot be future");
-
-        log.setStockRecord(stock);
-        return repository.save(log);
+        return repository.save(
+                ConsumptionLog.builder()
+                        .stockRecord(stock)
+                        .consumedQty(qty)
+                        .date(LocalDate.now())
+                        .build()
+        );
     }
 
-    public List<ConsumptionLog> getLogsByStockRecord(Long stockRecordId) {
-        return repository.findByStockRecordId(stockRecordId);
-    }
-
-    public ConsumptionLog getLog(Long id) {
-        return repository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("ConsumptionLog not found"));
+    public List<ConsumptionLog> getAll() {
+        return repository.findAll();
     }
 }

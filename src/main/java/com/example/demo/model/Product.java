@@ -4,9 +4,9 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Data
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Entity
 public class Product {
 
@@ -14,5 +14,5 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String productName;
+    private String name;
 }

@@ -4,9 +4,9 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Data
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Entity
 public class PredictionRule {
 

@@ -6,9 +6,9 @@ import lombok.*;
 import java.time.LocalDateTime;
 
 @Data
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Entity
 public class StockRecord {
 

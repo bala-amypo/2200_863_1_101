@@ -6,9 +6,9 @@ import lombok.*;
 import java.time.LocalDate;
 
 @Data
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Entity
 public class ConsumptionLog {
 

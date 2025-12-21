@@ -1,10 +1,7 @@
 package com.example.demo.service;
 
-import com.example.demo.exception.ResourceNotFoundException;
-import com.example.demo.model.ConsumptionLog;
-import com.example.demo.model.StockRecord;
-import com.example.demo.repository.ConsumptionLogRepository;
-import com.example.demo.repository.StockRecordRepository;
+import com.example.demo.model.*;
+import com.example.demo.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -15,14 +12,13 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ConsumptionLogService {
 
-    private final ConsumptionLogRepository repository;
+    private final ConsumptionLogRepository logRepo;
     private final StockRecordRepository stockRepo;
 
-    public ConsumptionLog log(Long stockId, int qty) {
-        StockRecord stock = stockRepo.findById(stockId)
-                .orElseThrow(() -> new ResourceNotFoundException("Stock not found"));
+    public ConsumptionLog logConsumption(Long stockId, int qty) {
+        StockRecord stock = stockRepo.findById(stockId).orElseThrow();
 
-        return repository.save(
+        return logRepo.save(
                 ConsumptionLog.builder()
                         .stockRecord(stock)
                         .consumedQty(qty)
@@ -32,6 +28,6 @@ public class ConsumptionLogService {
     }
 
     public List<ConsumptionLog> getAll() {
-        return repository.findAll();
+        return logRepo.findAll();
     }
 }

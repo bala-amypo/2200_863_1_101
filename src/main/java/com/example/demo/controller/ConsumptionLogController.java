@@ -8,26 +8,20 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/consumption")
+@RequestMapping("/consumption")
 @RequiredArgsConstructor
 public class ConsumptionLogController {
 
     private final ConsumptionLogService service;
 
-    @PostMapping("/{stockRecordId}")
-    public ConsumptionLog log(
-            @PathVariable Long stockRecordId,
-            @RequestBody ConsumptionLog log) {
-        return service.logConsumption(stockRecordId, log);
+    @PostMapping("/{stockId}/{qty}")
+    public ConsumptionLog log(@PathVariable Long stockId,
+                              @PathVariable int qty) {
+        return service.logConsumption(stockId, qty);
     }
 
-    @GetMapping("/record/{stockRecordId}")
-    public List<ConsumptionLog> byStock(@PathVariable Long stockRecordId) {
-        return service.getLogsByStockRecord(stockRecordId);
-    }
-
-    @GetMapping("/{id}")
-    public ConsumptionLog get(@PathVariable Long id) {
-        return service.getLog(id);
+    @GetMapping
+    public List<ConsumptionLog> getAll() {
+        return service.getAll();
     }
 }

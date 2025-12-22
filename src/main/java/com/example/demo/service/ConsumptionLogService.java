@@ -1,30 +1,40 @@
-package com.example.demo.controller;
+package com.example.demo.service;
 
 import com.example.demo.model.ConsumptionLog;
-import com.example.demo.service.ConsumptionLogService;
-import org.springframework.web.bind.annotation.*;
+import com.example.demo.model.Product;
+import com.example.demo.repository.ConsumptionLogRepository;
+import com.example.demo.repository.ProductRepository;
+import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
-@RestController
-@RequestMapping("/consumption")
-public class ConsumptionLogController {
+@Service
+public class ConsumptionLogService {
 
-    private final ConsumptionLogService service;
+    private final ConsumptionLogRepository logRepository;
+    private final ProductRepository productRepository;
 
-    public ConsumptionLogController(ConsumptionLogService service) {
-        this.service = service;
+    public ConsumptionLogService(
+            ConsumptionLogRepository logRepository,
+            ProductRepository productRepository) {
+        this.logRepository = logRepository;
+        this.productRepository = productRepository;
     }
 
-    @PostMapping("/{productId}")
-    public ConsumptionLog logConsumption(
-            @PathVariable Long productId,
-            @RequestParam int quantity) {
-        return service.create(productId, quantity);
+    public ConsumptionLog logConsumption(Long productId, int quantity) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException("Product not found"));
+
+        ConsumptionLog log = new ConsumptionLog();
+        log.setProduct(product);
+        log.setQuantity(quantity);
+        log.setDate(LocalDate.now());
+
+        return logRepository.save(log);
     }
 
-    @GetMapping
     public List<ConsumptionLog> getAll() {
-        return service.getAll();
+        return logRepository.findAll();
     }
 }

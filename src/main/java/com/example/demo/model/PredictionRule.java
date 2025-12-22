@@ -1,12 +1,7 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
-import lombok.*;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
 @Entity
 public class PredictionRule {
 
@@ -15,4 +10,27 @@ public class PredictionRule {
     private Long id;
 
     private int daysAhead;
+
+    public PredictionRule() {
+    }
+
+    public PredictionRule(int daysAhead) {
+        this.daysAhead = daysAhead;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public int getDaysAhead() {
+        return daysAhead;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setDaysAhead(int daysAhead) {
+        this.daysAhead = daysAhead;
+    }
 }

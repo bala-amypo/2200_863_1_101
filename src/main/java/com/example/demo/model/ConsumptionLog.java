@@ -1,14 +1,8 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
-import lombok.*;
-
 import java.time.LocalDate;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
 @Entity
 public class ConsumptionLog {
 
@@ -17,8 +11,50 @@ public class ConsumptionLog {
     private Long id;
 
     @ManyToOne
-    private StockRecord stockRecord;
+    private Product product;
 
-    private int consumedQty;
+    private int quantity;
+
     private LocalDate date;
+
+    public ConsumptionLog() {
+    }
+
+    public ConsumptionLog(Product product, int quantity, LocalDate date) {
+        this.product = product;
+        this.quantity = quantity;
+        this.date = date;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public Product getProduct() {
+        return product;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setProduct(Product product) {
+        this.product = product;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    public void setDate(LocalDate date) {
+        this.date = date;
+    }
 }

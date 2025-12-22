@@ -1,41 +1,51 @@
 package com.example.demo.service;
 
-import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.model.*;
 import com.example.demo.repository.*;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 public class StockRecordService {
 
-    private final StockRecordRepository repository;
+    private final StockRecordRepository stockRepo;
     private final ProductRepository productRepo;
     private final WarehouseRepository warehouseRepo;
 
-    public StockRecord create(Long productId, Long warehouseId, int qty) {
-
-        Product product = productRepo.findById(productId)
-                .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
-
-        Warehouse warehouse = warehouseRepo.findById(warehouseId)
-                .orElseThrow(() -> new ResourceNotFoundException("Warehouse not found"));
-
-        return repository.save(
-                StockRecord.builder()
-                        .product(product)
-                        .warehouse(warehouse)
-                        .quantity(qty)
-                        .createdAt(LocalDateTime.now())
-                        .build()
-        );
+    public StockRecordService(
+            StockRecordRepository stockRepo,
+            ProductRepository productRepo,
+            WarehouseRepository warehouseRepo) {
+        this.stockRepo = stockRepo;
+        this.productRepo = productRepo;
+        this.warehouseRepo = warehouseRepo;
     }
 
-    public List<StockRecord> getAll() {
-        return repository.findAll();
+    public StockRecord createStockRecord(Long productId, Long warehouseId, StockRecord record) {
+        Product product = productRepo.findById(productId)
+                .orElseThrow(() -> new RuntimeException("Product not found"));
+        Warehouse warehouse = warehouseRepo.findById(warehouseId)
+                .orElseThrow(() -> new RuntimeException("Warehouse not found"));
+
+        record.setProduct(product);
+        record.setWarehouse(warehouse);
+        record.setCreatedAt(LocalDateTime.now());
+
+        return stockRepo.save(record);
+    }
+
+    public StockRecord getStockRecord(Long id) {
+        return stockRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException("StockRecord not found"));
+    }
+
+    public List<StockRecord> getRecordsByProduct(Long productId) {
+        return stockRepo.findByProductId(productId);
+    }
+
+    public List<StockRecord> getRecordsByWarehouse(Long warehouseId) {
+        return stockRepo.findByWarehouseId(warehouseId);
     }
 }

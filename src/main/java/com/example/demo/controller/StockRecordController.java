@@ -12,7 +12,6 @@ public class StockRecordController {
 
     private final StockRecordService service;
 
-    // Manual constructor for dependency injection
     public StockRecordController(StockRecordService service) {
         this.service = service;
     }
@@ -22,4 +21,21 @@ public class StockRecordController {
             @PathVariable Long productId,
             @PathVariable Long warehouseId,
             @RequestBody StockRecord record) {
-        return service.createStockRecord(productId, wareh
+        return service.createStockRecord(productId, warehouseId, record);
+    }
+
+    @GetMapping("/{id}")
+    public StockRecord get(@PathVariable Long id) {
+        return service.getStockRecord(id);
+    }
+
+    @GetMapping("/product/{productId}")
+    public List<StockRecord> byProduct(@PathVariable Long productId) {
+        return service.getRecordsByProduct(productId);
+    }
+
+    @GetMapping("/warehouse/{warehouseId}")
+    public List<StockRecord> byWarehouse(@PathVariable Long warehouseId) {
+        return service.getRecordsByWarehouse(warehouseId);
+    }
+} // <-- make sure this closing brace exists

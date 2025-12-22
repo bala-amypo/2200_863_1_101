@@ -2,17 +2,19 @@ package com.example.demo.controller;
 
 import com.example.demo.model.Warehouse;
 import com.example.demo.service.WarehouseService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/awarehouses")
-@RequiredArgsConstructor
+@RequestMapping("/api/warehouses")
 public class WarehouseController {
 
     private final WarehouseService service;
+
+    public WarehouseController(WarehouseService service) {
+        this.service = service;
+    }
 
     @PostMapping
     public Warehouse create(@RequestBody Warehouse warehouse) {
@@ -28,4 +30,4 @@ public class WarehouseController {
     public Warehouse get(@PathVariable Long id) {
         return service.getWarehouse(id);
     }
-}
+} // <-- make sure this closing brace exists

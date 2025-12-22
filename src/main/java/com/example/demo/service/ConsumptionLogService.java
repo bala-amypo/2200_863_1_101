@@ -1,33 +1,40 @@
 package com.example.demo.service;
 
-import com.example.demo.model.*;
-import com.example.demo.repository.*;
-import lombok.RequiredArgsConstructor;
+import com.example.demo.model.ConsumptionLog;
+import com.example.demo.model.Product;
+import com.example.demo.repository.ConsumptionLogRepository;
+import com.example.demo.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 public class ConsumptionLogService {
 
-    private final ConsumptionLogRepository logRepo;
-    private final StockRecordRepository stockRepo;
+    private final ConsumptionLogRepository logRepository;
+    private final ProductRepository productRepository;
 
-    public ConsumptionLog logConsumption(Long stockId, int qty) {
-        StockRecord stock = stockRepo.findById(stockId).orElseThrow();
+    public ConsumptionLogService(
+            ConsumptionLogRepository logRepository,
+            ProductRepository productRepository) {
+        this.logRepository = logRepository;
+        this.productRepository = productRepository;
+    }
 
-        return logRepo.save(
-                ConsumptionLog.builder()
-                        .stockRecord(stock)
-                        .consumedQty(qty)
-                        .date(LocalDate.now())
-                        .build()
-        );
+    public ConsumptionLog create(Long productId, int quantity) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException("Product not found"));
+
+        ConsumptionLog log = new ConsumptionLog();
+        log.setProduct(product);
+        log.setQuantity(quantity);
+        log.setDate(LocalDate.now());
+
+        return logRepository.save(log);
     }
 
     public List<ConsumptionLog> getAll() {
-        return logRepo.findAll();
+        return logRepository.findAll();
     }
 }

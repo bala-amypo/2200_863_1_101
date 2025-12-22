@@ -2,17 +2,20 @@ package com.example.demo.controller;
 
 import com.example.demo.model.ConsumptionLog;
 import com.example.demo.service.ConsumptionLogService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/consumption")
-@RequiredArgsConstructor
 public class ConsumptionLogController {
 
     private final ConsumptionLogService service;
+
+    // Manual constructor for dependency injection
+    public ConsumptionLogController(ConsumptionLogService service) {
+        this.service = service;
+    }
 
     @PostMapping("/{stockId}/{qty}")
     public ConsumptionLog log(@PathVariable Long stockId,

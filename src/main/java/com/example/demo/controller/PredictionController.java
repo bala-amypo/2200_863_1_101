@@ -2,7 +2,6 @@ package com.example.demo.controller;
 
 import com.example.demo.model.PredictionRule;
 import com.example.demo.service.PredictionService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -10,10 +9,14 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/predict")
-@RequiredArgsConstructor
 public class PredictionController {
 
     private final PredictionService service;
+
+    // Manual constructor for dependency injection
+    public PredictionController(PredictionService service) {
+        this.service = service;
+    }
 
     @GetMapping("/restock-date/{stockRecordId}")
     public LocalDate predict(@PathVariable Long stockRecordId) {

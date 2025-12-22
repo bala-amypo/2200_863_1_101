@@ -3,5 +3,14 @@ package com.example.demo.repository;
 import com.example.demo.model.ConsumptionLog;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface ConsumptionLogRepository extends JpaRepository<ConsumptionLog, Long> {
+import java.time.LocalDate;
+import java.util.List;
+
+public interface ConsumptionLogRepository
+        extends JpaRepository<ConsumptionLog, Long> {
+
+    List<ConsumptionLog> findByProductIdAndDateAfter(
+            Long productId,
+            LocalDate date
+    );
 }

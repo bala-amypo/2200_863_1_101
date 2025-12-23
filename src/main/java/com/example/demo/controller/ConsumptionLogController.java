@@ -12,7 +12,7 @@ public class ConsumptionLogController {
 
     private final ConsumptionLogService service;
 
-    // Manual constructor for dependency injection
+    
     public ConsumptionLogController(ConsumptionLogService service) {
         this.service = service;
     }

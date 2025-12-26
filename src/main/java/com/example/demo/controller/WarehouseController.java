@@ -2,32 +2,33 @@ package com.example.demo.controller;
 
 import com.example.demo.model.Warehouse;
 import com.example.demo.service.WarehouseService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/warehouses")
 public class WarehouseController {
-
-    private final WarehouseService service;
-
-    public WarehouseController(WarehouseService service) {
-        this.service = service;
-    }
-
+    
+    @Autowired
+    private WarehouseService warehouseService;
+    
     @PostMapping
-    public Warehouse create(@RequestBody Warehouse warehouse) {
-        return service.createWarehouse(warehouse);
+    public ResponseEntity<Warehouse> createWarehouse(@RequestBody Warehouse warehouse) {
+        Warehouse created = warehouseService.createWarehouse(warehouse);
+        return ResponseEntity.ok(created);
     }
-
+    
     @GetMapping
-    public List<Warehouse> getAll() {
-        return service.getAllWarehouses();
+    public ResponseEntity<List<Warehouse>> getAllWarehouses() {
+        List<Warehouse> warehouses = warehouseService.getAllWarehouses();
+        return ResponseEntity.ok(warehouses);
     }
-
+    
     @GetMapping("/{id}")
-    public Warehouse get(@PathVariable Long id) {
-        return service.getWarehouse(id);
+    public ResponseEntity<Warehouse> getWarehouse(@PathVariable Long id) {
+        Warehouse warehouse = warehouseService.getWarehouse(id);
+        return ResponseEntity.ok(warehouse);
     }
-} // <-- make sure this closing brace exists
+}

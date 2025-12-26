@@ -15,13 +15,13 @@ public class User {
     private String name;
     
     @Column(unique = true, nullable = false)
-    private Strker-index=19 reference-tracker>ence-tracker>4 reference-tracker>0 reference-tracker>rin<mark marker-index=12 reference-tracker>g em<ma-index=13 reference-tracker>rk marker-index=11 reference-tracker>ail;
+    private String email;
     
     @Column(nullable = false)
     private String password;
     
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
-    @Collection</mark>Table(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
+    @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
     @Enumerated(EnumType.STRING)
     @Column(name = "role")
     private Set<Role> roles;

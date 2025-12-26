@@ -46,7 +46,7 @@ public class UserServiceImpl implements UserService {
             .email(dto.getEmail())
             .password(passwordEncoder.encode(dto.getPassword()))
             .roles(dto.getRoles() != null ? 
-                dto.getRoles().stream().map(Role::valueOf).collect(Collectors.toSet()) : 
+                dto.getRoles().stream().map(this::mapToRole).collect(Collectors.toSet()) : 
                 Set.of(Role.ROLE_USER))
             .createdAt(LocalDateTime.now())
             .build();
@@ -81,5 +81,18 @@ public class UserServiceImpl implements UserService {
     public User getByEmail(String email) {
         return userRepository.findByEmail(email)
             .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+    }
+    
+    private Role mapToRole(String roleString) {
+        switch (roleString.toUpperCase()) {
+            case "USER":
+            case "ROLE_USER":
+                return Role.ROLE_USER;
+            case "ADMIN":
+            case "ROLE_ADMIN":
+                return Role.ROLE_ADMIN;
+            default:
+                throw new IllegalArgumentException("Invalid role: " + roleString);
+        }
     }
 }

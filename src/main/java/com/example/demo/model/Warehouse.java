@@ -6,27 +6,27 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "warehouses")
-@Data
+@Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class Warehouse {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
-    @Column(unique = true, nullable = false)
-    private String warehouseName;
-    
+
+    @Column(nullable = false, unique = true)
+    private String name;
+
     @Column(nullable = false)
     private String location;
-    
+
     private LocalDateTime createdAt;
-    
+
     @PrePersist
     protected void onCreate() {
-        if (createdAt == null) {
-            createdAt = LocalDateTime.now();
-        }
+        createdAt = LocalDateTime.now();
     }
 }
